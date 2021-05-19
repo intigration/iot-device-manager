@@ -1,43 +1,53 @@
 import Vue from 'vue'
+import axios from 'axios'
+
+import App from './App.vue'
+import router from './router'
+import store from './store'
+import 'element-ui/lib/theme-chalk/index.css'
+
+//import './element-variables.scss'
 
 import 'normalize.css/normalize.css' // A modern alternative to CSS resets
 
+// ElementUI Theme
 import ElementUI from 'element-ui'
-import 'element-ui/lib/theme-chalk/index.css'
-import locale from 'element-ui/lib/locale/lang/en' // lang i18n
+import './element-variables.scss'
+import locale from 'element-ui/lib/locale/lang/en'
 
-import '@/styles/index.scss' // global css
+// Tailwind
+import '@/assets/tailwind.min.css'
 
-import App from './App'
-import store from './store'
-import router from './router'
+// Fontawesome
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { APP_CONSUMED_ICONS } from './utils/fontawesome-library'
 
-import '@/icons' // icon
-import '@/permission' // permission control
+library.add(...APP_CONSUMED_ICONS)
+Vue.component('font-awesome-icon', FontAwesomeIcon)
 
-/**
- * If you don't want to use mock-server
- * you want to use MockJs for mock api
- * you can execute: mockXHR()
- *
- * Currently MockJs will be used in the production environment,
- * please remove it before going online ! ! !
- */
-if (process.env.NODE_ENV === 'production') {
-  const { mockXHR } = require('../mock')
-  mockXHR()
-}
+// Async Computed
+import AsyncComputed from 'vue-async-computed'
 
-// set ElementUI lang to EN
 Vue.use(ElementUI, { locale })
-// 如果想要中文版 element-ui，按如下方式声明
-// Vue.use(ElementUI)
+Vue.use(AsyncComputed)
+
+// HighCharts Installation
+import Highcharts from 'highcharts'
+import highchartsMore from 'highcharts/highcharts-more'
+import highchartsSolidGauge from 'highcharts/modules/solid-gauge'
+import HighchartsVue from 'highcharts-vue'
+
+highchartsMore(Highcharts)
+highchartsSolidGauge(Highcharts)
+Vue.use(HighchartsVue, {
+  Highcharts
+})
 
 Vue.config.productionTip = false
 
 new Vue({
-  el: '#app',
   router,
   store,
-  render: h => h(App)
-})
+  render: h => h(App),
+}).$mount('#app')
